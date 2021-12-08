@@ -4,10 +4,23 @@ on:
 jobs:
   dire_bonjour:
     runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y cowsay
+      - run: ls -l # Liste les fichier du répertoire courant
+      - run: cat README.md | cowsay # Affiche le contenu du fichier `README.md` à la base du dépôt
+
+  run_maven:
+    runs-on: ubuntu-20.04
     container: 
       image: ghcr.io/cicd-lectures/gitpod:latest
       options: --user=root
     steps:
-      - uses: actions/checkout@v2
-      - run: ls -l # Liste les fichier du répertoire courant
-      - run: cat README.md | cowsay # Affiche le contenu du fichier `README.md` à la base du dépôt
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      - run: mvn --version
+      - run: mvn effective:pom
