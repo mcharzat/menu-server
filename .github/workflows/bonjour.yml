@@ -14,9 +14,6 @@ jobs:
 
   run_maven:
     runs-on: ubuntu-20.04
-    container: 
-      image: ghcr.io/cicd-lectures/gitpod:latest
-      options: --user=root
     steps:
       - uses: actions/setup-java@v2
         with:
