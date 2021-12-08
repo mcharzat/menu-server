@@ -21,4 +21,4 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
       - run: mvn --version
-      - run: mvn help:effective:pom
+      - run: mvn help:effective-pom
