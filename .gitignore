@@ -1,5 +1,6 @@
 HELP.md
 menu-server.tar.gz
+executer.sh
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
