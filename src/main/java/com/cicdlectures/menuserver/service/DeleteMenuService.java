@@ -3,8 +3,6 @@ package com.cicdlectures.menuserver.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.Console;
-
 import com.cicdlectures.menuserver.exception.IdNotFoundException;
 import com.cicdlectures.menuserver.repository.MenuRepository;
 

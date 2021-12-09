@@ -62,7 +62,6 @@ public class ListMenuServiceTests {
                 )
             )
         );
-
         assertEquals(expectedMenu, listMenu);
     }
 }
