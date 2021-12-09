@@ -44,7 +44,8 @@ public class MenuController {
   }
 
   @DeleteMapping(path = "/menus/{id}")
-  int deleteMenu(@PathVariable Long id) {
+  @ResponseStatus(HttpStatus.NOT_FOUD)
+  public int deleteMenu(@PathVariable Long id) {
     this.menuRepository.deleteById(id);
     return 200;
   }
