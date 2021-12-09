@@ -14,22 +14,23 @@ import org.springframework.http.HttpStatus;
 
 import com.cicdlectures.menuserver.dto.MenuDto;
 import com.cicdlectures.menuserver.service.CreateMenuService;
+import com.cicdlectures.menuserver.service.DeleteMenuService;
 import com.cicdlectures.menuserver.service.ListMenuService;
-import com.cicdlectures.menuserver.repository.MenuRepository;
 
 @RestController
 public class MenuController {
 
   private final CreateMenuService createMenuService;
 
+  private final DeleteMenuService deleteMenuService;
+
   private final ListMenuService listMenuService;
 
-  private final MenuRepository menuRepository;
   @Autowired
-  MenuController(CreateMenuService createMenuService, ListMenuService listMenuService, MenuRepository menuRepository) {
+  MenuController(CreateMenuService createMenuService, DeleteMenuService deleteMenuService, ListMenuService listMenuService) {
     this.createMenuService = createMenuService;
+    this.deleteMenuService = deleteMenuService;
     this.listMenuService = listMenuService;
-    this.menuRepository = menuRepository;
   }
 
   @GetMapping(path = "/menus", produces = "application/json")
@@ -45,8 +46,7 @@ public class MenuController {
 
   @DeleteMapping(path = "/menus/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public int deleteMenu(@PathVariable Long id) {
-    this.menuRepository.deleteById(id);
-    return 200;
+  public void deleteMenu(@PathVariable(value = "id") long  id) {
+    deleteMenuService.deleteMenu(id);
   }
 }
