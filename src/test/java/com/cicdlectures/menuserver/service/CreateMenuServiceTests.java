@@ -23,7 +23,7 @@ import com.cicdlectures.menuserver.model.Menu;
 import com.cicdlectures.menuserver.repository.DishRepository;
 import com.cicdlectures.menuserver.repository.MenuRepository;
 
-public class CreateMenuServiceTest {
+public class CreateMenuServiceTests {
 
     private MenuRepository menuRepository;
 
@@ -54,31 +54,25 @@ public class CreateMenuServiceTest {
         );
 
         Menu expectedSavedMenu = new Menu(
-            Long.valueOf(1),
+            null,
             "Menu spécial du chef",
             new HashSet<>(
                 Arrays.asList(
-                new Dish(Long.valueOf(1), "Bananes aux fraises", null),
-                new Dish(Long.valueOf(2), "Bananes flambées", null)
-                )
-            )
-        );
-
-        MenuDto expectedMenu =  new MenuDto(
-            Long.valueOf(1),
-            "Menu spécial du chef",
-            new HashSet<>(
-                Arrays.asList(
-                new DishDto(Long.valueOf(1), "Bananes aux fraises"),
-                new DishDto(Long.valueOf(2), "Bananes flambées")
+                new Dish(null, "Bananes aux fraises", null),
+                new Dish(null, "Bananes flambées", null)
                 )
             )
         );
 
         when(menuRepository.save(any(Menu.class))).thenReturn(expectedSavedMenu);
-        MenuDto savedMenu = subject.createMenu(newMenu);
+        subject.createMenu(newMenu);
 
-        assertEquals(expectedMenu, savedMenu);
+        ArgumentCaptor<Menu> expectedMenuCaptor = ArgumentCaptor.forClass(Menu.class);
+
+        verify(menuRepository, times(1)).save(expectedMenuCaptor.capture());
+        Menu savedMenu = expectedMenuCaptor.getValue();
+
+        assertEquals(expectedSavedMenu, savedMenu);
     }
 
     @Test
