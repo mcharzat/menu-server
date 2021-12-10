@@ -39,7 +39,7 @@ public class CreateMenuServiceTest {
     }
   
     @Test
-    @DisplayName("lists all known menus")
+    @DisplayName("create and save a menu")
     public void createNewMenus() {
 
         MenuDto newMenu =  new MenuDto(
@@ -78,10 +78,45 @@ public class CreateMenuServiceTest {
         when(menuRepository.save(any(Menu.class))).thenReturn(expectedSavedMenu);
         MenuDto savedMenu = subject.createMenu(newMenu);
 
+        assertEquals(expectedMenu, savedMenu);
+    }
+
+    @Test
+    @DisplayName("deduplicate of dishes")
+    public void duplicateDishes() {
+        MenuDto newMenu =  new MenuDto(
+            null,
+            "Menu spécial du chef",
+            new HashSet<>(
+                Arrays.asList(
+                new DishDto(null, "Bananes aux fraises"),
+                new DishDto(null, "Bananes flambées")
+                )
+            )
+        );
+
+        Menu expectedSavedMenu = new Menu(
+            null,
+            "Menu spécial du chef",
+            new HashSet<>(
+                Arrays.asList(
+                new Dish(null, "Bananes aux fraises", null),
+                new Dish(Long.valueOf(33), "Bananes flambées", null)
+                )
+            )
+        );
+
+        Dish existingDish = new Dish(Long.valueOf(33), "Bananes flambées", null);
+        when(dishRepository.findByName("Bananes flambées")).thenReturn(existingDish);
+
+        when(menuRepository.save(any(Menu.class))).thenReturn(expectedSavedMenu);
+        subject.createMenu(newMenu);
+
         ArgumentCaptor<Menu> expectedMenuCaptor = ArgumentCaptor.forClass(Menu.class);
 
         verify(menuRepository, times(1)).save(expectedMenuCaptor.capture());
+        Menu savedMenu = expectedMenuCaptor.getValue();
 
-        assertEquals(expectedMenu, savedMenu);
+        assertEquals(expectedSavedMenu, savedMenu);
     }
 }
